@@ -23,7 +23,8 @@ async function getWeather() {
 
         const { latitude, longitude, name, country } = geoData.results[0];
 
-        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure,uv_index&hourly=temperature_2m,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`);
+        // Fetch 7 daily forecasts via daily parameter
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure,uv_index&hourly=temperature_2m,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&forecast_days=8&timezone=auto`);
         currentWeatherData = await weatherRes.json();
 
         displayWeatherData(name, country, latitude, longitude);
@@ -66,10 +67,14 @@ function displayWeatherData(name, country, latitude, longitude) {
     document.getElementById('weatherDesc').innerText = weatherInfo.text;
     document.getElementById('weatherIcon').className = `fa-solid ${weatherInfo.icon}`;
 
-    // 3-Day Forecast
+    // 7-Day Forecast Grid Loop
     const forecastContainer = document.getElementById('forecastContainer');
     forecastContainer.innerHTML = '';
-    for (let i = 1; i <= 3; i++) {
+    
+    // Loop through 7 upcoming days (index 1 to 7)
+    for (let i = 1; i <= 7; i++) {
+        if (!data.daily.time[i]) break;
+
         const dateStr = data.daily.time[i];
         const dayName = new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' });
         
@@ -83,10 +88,10 @@ function displayWeatherData(name, country, latitude, longitude) {
         const forecastInfo = getWeatherDetails(data.daily.weather_code[i]);
 
         forecastContainer.innerHTML += `
-            <div class="bg-white/5 border border-white/10 p-3 rounded-2xl text-center flex flex-col items-center justify-center">
-                <p class="text-xs text-purple-300 font-medium mb-1">${dayName}</p>
-                <i class="fa-solid ${forecastInfo.icon} text-xl my-1 text-amber-300"></i>
-                <p class="text-xs font-bold">${Math.round(maxT)}° <span class="text-purple-300 font-normal">/ ${Math.round(minT)}°</span></p>
+            <div class="bg-white/5 border border-white/10 p-2 rounded-2xl text-center flex flex-col items-center justify-center">
+                <p class="text-[11px] text-purple-300 font-medium mb-1">${dayName}</p>
+                <i class="fa-solid ${forecastInfo.icon} text-lg my-1 text-amber-300"></i>
+                <p class="text-[11px] font-bold">${Math.round(maxT)}° <span class="text-purple-300 font-normal">/ ${Math.round(minT)}°</span></p>
             </div>
         `;
     }
