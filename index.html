@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleek Weather App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 min-h-screen text-white flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-2xl">
+        <!-- Search Bar -->
+        <div class="flex gap-2 mb-6">
+            <input type="text" id="cityInput" placeholder="Enter city name..." class="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400">
+            <button onclick="getWeather()" class="bg-purple-600 hover:bg-purple-500 px-5 rounded-xl font-semibold transition cursor-pointer">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+
+        <!-- Weather Result Card -->
+        <div id="weatherResult" class="text-center hidden">
+            <h2 id="cityName" class="text-3xl font-bold mb-1"></h2>
+            <p id="weatherDesc" class="text-purple-200 capitalize mb-4 text-sm"></p>
+            
+            <div class="text-6xl font-extrabold mb-6" id="temp">--°C</div>
+
+            <!-- Weather Details Grid -->
+            <div class="grid grid-cols-2 gap-3 mt-6">
+                <div class="bg-white/5 border border-white/10 p-3 rounded-2xl flex items-center gap-3">
+                    <i class="fa-solid fa-droplet text-blue-400 text-xl"></i>
+                    <div class="text-left">
+                        <p class="text-xs text-purple-300">Humidity</p>
+                        <p id="humidity" class="font-semibold">--%</p>
+                    </div>
+                </div>
+                <div class="bg-white/5 border border-white/10 p-3 rounded-2xl flex items-center gap-3">
+                    <i class="fa-solid fa-wind text-teal-400 text-xl"></i>
+                    <div class="text-left">
+                        <p class="text-xs text-purple-300">Wind Speed</p>
+                        <p id="wind" class="font-semibold">-- km/h</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <p id="errorMsg" class="text-red-300 text-center hidden mt-4">City not found. Try again!</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
 
