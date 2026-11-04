@@ -58,7 +58,6 @@ function displayWeatherData(name, country, latitude, longitude) {
     document.getElementById('uvIndex').innerText = data.current.uv_index !== undefined ? data.current.uv_index : "N/A";
     document.getElementById('pressure').innerText = `${data.current.surface_pressure} hPa`;
 
-    // Format Sunrise and Sunset times
     const sunriseTime = data.daily.sunrise[0].split('T')[1];
     const sunsetTime = data.daily.sunset[0].split('T')[1];
     document.getElementById('sunTimes').innerText = `Rise: ${sunriseTime} | Set: ${sunsetTime}`;
@@ -105,7 +104,6 @@ function toggleUnits() {
     if (currentWeatherData) {
         const cityHeading = document.getElementById('cityName').innerText.split(',');
         const cityName = cityHeading[0].trim();
-        // Re-render current loaded data in new units
         const lat = marker ? marker.getLatLng().lat : 0;
         const lon = marker ? marker.getLatLng().lng : 0;
         displayWeatherData(cityName, "", lat, lon);
@@ -176,19 +174,4 @@ function updateChart(hourlyData) {
             }
         }
     });
-}
-
-function getWeatherDetails(code) {
-    const map = {
-        0: { text: "Clear sky", icon: "fa-sun" },
-        1: { text: "Mainly clear", icon: "fa-cloud-sun" },
-        2: { text: "Partly cloudy", icon: "fa-cloud-sun" },
-        3: { text: "Overcast", icon: "fa-cloud" },
-        45: { text: "Foggy", icon: "fa-smog" },
-        51: { text: "Light drizzle", icon: "fa-cloud-rain" },
-        61: { text: "Slight rain", icon: "fa-cloud-showers-heavy" },
-        71: { text: "Snow fall", icon: "fa-snowflake" },
-        95: { text: "Thunderstorm", icon: "fa-bolt" }
-    };
-    return map[code] || { text: "Variable conditions", icon: "fa-cloud" };
 }
