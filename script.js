@@ -23,7 +23,6 @@ async function getWeather() {
 
         const { latitude, longitude, name, country } = geoData.results[0];
 
-        // Fetch 7 daily forecasts via daily parameter
         const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure,uv_index&hourly=temperature_2m,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&forecast_days=8&timezone=auto`);
         currentWeatherData = await weatherRes.json();
 
@@ -63,15 +62,20 @@ function displayWeatherData(name, country, latitude, longitude) {
     const sunsetTime = data.daily.sunset[0].split('T')[1];
     document.getElementById('sunTimes').innerText = `Rise: ${sunriseTime} | Set: ${sunsetTime}`;
 
-    const weatherInfo = getWeatherDetails(data.current.weather_code);
+    const weatherCode = data.current.weather_code;
+    const weatherInfo = getWeatherDetails(weatherCode);
     document.getElementById('weatherDesc').innerText = weatherInfo.text;
     document.getElementById('weatherIcon').className = `fa-solid ${weatherInfo.icon}`;
+
+    // Trigger Canvas Background Animation Engine
+    if (typeof weatherAnimEngine !== 'undefined' && weatherAnimEngine) {
+        weatherAnimEngine.setWeather(weatherCode);
+    }
 
     // 7-Day Forecast Grid Loop
     const forecastContainer = document.getElementById('forecastContainer');
     forecastContainer.innerHTML = '';
     
-    // Loop through 7 upcoming days (index 1 to 7)
     for (let i = 1; i <= 7; i++) {
         if (!data.daily.time[i]) break;
 
