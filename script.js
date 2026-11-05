@@ -23,7 +23,8 @@ async function getWeather() {
 
         const { latitude, longitude, name, country } = geoData.results[0];
 
-        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure,uv_index&hourly=temperature_2m,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&forecast_days=8&timezone=auto`);
+        // Added `is_day` parameter to track day (1) vs night (0)
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,surface_pressure,uv_index,is_day&hourly=temperature_2m,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&forecast_days=8&timezone=auto`);
         currentWeatherData = await weatherRes.json();
 
         displayWeatherData(name, country, latitude, longitude);
@@ -62,8 +63,11 @@ function displayWeatherData(name, country, latitude, longitude) {
     const sunsetTime = data.daily.sunset[0].split('T')[1];
     document.getElementById('sunTimes').innerText = `Rise: ${sunriseTime} | Set: ${sunsetTime}`;
 
+    // Get Day/Night status (1 = Day, 0 = Night)
+    const isDay = data.current.is_day !== undefined ? data.current.is_day : 1;
     const weatherCode = data.current.weather_code;
-    const weatherInfo = getWeatherDetails(weatherCode);
+    const weatherInfo = getWeatherDetails(weatherCode, isDay);
+
     document.getElementById('weatherDesc').innerText = weatherInfo.text;
     document.getElementById('weatherIcon').className = `fa-solid ${weatherInfo.icon}`;
 
@@ -89,12 +93,12 @@ function displayWeatherData(name, country, latitude, longitude) {
             minT = (minT * 9/5) + 32;
         }
 
-        const forecastInfo = getWeatherDetails(data.daily.weather_code[i]);
+        const forecastInfo = getWeatherDetails(data.daily.weather_code[i], 1);
 
         forecastContainer.innerHTML += `
             <div class="bg-white/5 border border-white/10 p-2 rounded-2xl text-center flex flex-col items-center justify-center">
                 <p class="text-[11px] text-purple-300 font-medium mb-1">${dayName}</p>
-                <i class="fa-solid ${forecastInfo.icon} text-lg my-1 text-amber-300"></i>
+                <i class="fa-solid ${forecastInfo.icon} text-lg my-1"></i>
                 <p class="text-[11px] font-bold">${Math.round(maxT)}° <span class="text-purple-300 font-normal">/ ${Math.round(minT)}°</span></p>
             </div>
         `;
