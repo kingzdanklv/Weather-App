@@ -16,9 +16,13 @@
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950 min-h-screen text-white flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950 min-h-screen text-white flex items-center justify-center p-4 relative">
 
-    <div class="w-full max-w-xl bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-2xl my-6">
+    <!-- Dynamic Background Animation Canvas -->
+    <canvas id="weatherCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Main Content Container -->
+    <div class="w-full max-w-xl bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-2xl my-6 relative z-10">
         
         <!-- Search & Unit Toggle Header -->
         <div class="flex gap-2 mb-6 items-center">
@@ -114,6 +118,7 @@
 
     <!-- Script Dependencies -->
     <script src="config.js"></script>
+    <script src="animation.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
